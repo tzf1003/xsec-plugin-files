@@ -23,7 +23,7 @@ function commentEditor(controller, lineNumber, code) {
   let submit;
   input.addEventListener("input", () => {
     controller.state.comment = input.value;
-    if (submit) submit.disabled = !input.value.trim();
+    if (submit) submit.disabled = !controller.composerWritable || !input.value.trim();
   });
   input.addEventListener("keydown", (event) => {
     if ((event.metaKey || event.ctrlKey) && event.key === "Enter") {

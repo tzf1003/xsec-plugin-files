@@ -1,5 +1,6 @@
 export const MAX_COMMENT_CHARACTERS = 32_768;
 export const MAX_PREVIEW_LINES = 2_000;
+const PREVIEW_OVERFLOW_ALLOWANCE = 1;
 const KILOBYTE = 1_024;
 const MEGABYTE = KILOBYTE * KILOBYTE;
 
@@ -32,7 +33,7 @@ export function fileContent(value) {
 }
 
 export function previewLines(content) {
-  const lines = content.split(/\r?\n/);
+  const lines = content.split(/\r?\n/, MAX_PREVIEW_LINES + PREVIEW_OVERFLOW_ALLOWANCE);
   return { lines: lines.slice(0, MAX_PREVIEW_LINES), truncated: lines.length > MAX_PREVIEW_LINES };
 }
 
