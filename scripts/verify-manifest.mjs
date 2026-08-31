@@ -12,7 +12,7 @@ const expectedMethods = [
   "xsec.workspace.composer.path.add",
 ];
 
-if (manifest.version !== "1.3.0") throw new Error("项目文件插件版本必须为 1.3.0");
+if (manifest.version !== "1.3.1") throw new Error("项目文件插件版本必须为 1.3.1");
 if (extension?.engines?.pluginApi !== "^1.4.0") throw new Error("项目文件插件需要 Plugin API 1.4");
 if (Object.keys(extension?.frontendApi?.methods ?? {}).sort().join("|") !== expectedMethods.join("|")) {
   throw new Error("项目文件插件 RPC 声明不完整");
