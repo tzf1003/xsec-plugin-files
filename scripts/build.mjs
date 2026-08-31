@@ -8,11 +8,11 @@ const root = fileURLToPath(pluginRoot);
 await build({
   bundle: true,
   charset: "utf8",
-  entryPoints: [new URL("frontend-src/index.js", pluginRoot).pathname],
+  entryPoints: [fileURLToPath(new URL("frontend-src/index.js", pluginRoot))],
   format: "esm",
   legalComments: "none",
   minify: true,
-  outfile: new URL("com.xsec.desktop/frontend/index.js", pluginRoot).pathname,
+  outfile: fileURLToPath(new URL("com.xsec.desktop/frontend/index.js", pluginRoot)),
   target: "es2022",
   absWorkingDir: root,
 });

@@ -86,6 +86,10 @@ export class ProjectFilesController {
     return this.revision === revision && this.directoryRequests.get(directory) === request;
   }
 
+  fileCurrent(revision, request, selected) {
+    return this.revision === revision && this.fileRequest === request && this.state.selected === selected;
+  }
+
   async loadDirectory(directory) {
     const revision = this.revision;
     const request = (this.directoryRequests.get(directory) ?? 0) + 1;
@@ -173,31 +177,39 @@ export class ProjectFilesController {
 
   async addPath(entry) {
     if (!this.composerWritable || this.state.addingPaths.has(entry.path)) return;
-    this.state.addingPaths.add(entry.path);
+    const revision = this.revision;
+    const addingPaths = this.state.addingPaths;
+    addingPaths.add(entry.path);
     this.state.actionError = "";
     this.state.actionNotice = "";
     this.render();
     console.info("project-files.composer-path-add.started", { targetType: entry.isDirectory ? "directory" : "file" });
     try {
       await this.host.request("xsec.workspace.composer.path.add", pathRequest(entry));
+      if (this.revision !== revision) return;
       console.info("project-files.composer-path-add.completed", { targetType: entry.isDirectory ? "directory" : "file" });
       this.state.actionNotice = `已将“${entry.name}”添加到会话`;
     } catch (error) {
+      if (this.revision !== revision) return;
       console.error("project-files.composer-path-add.failed", { errorType: error instanceof Error ? error.name : typeof error, targetType: entry.isDirectory ? "directory" : "file" });
       this.state.actionError = `添加“${entry.name}”失败：${String(error)}`;
     } finally {
-      this.state.addingPaths.delete(entry.path);
+      if (this.state.addingPaths !== addingPaths) return;
+      addingPaths.delete(entry.path);
       this.render();
     }
   }
 
   async submitComment(line, code) {
     if (!this.composerWritable || !this.state.selected || this.state.submittingComment) return;
+    const revision = this.revision;
+    const request = this.fileRequest;
+    const selected = this.state.selected;
     let comment;
     try {
       comment = commentText(this.state.comment);
     } catch (error) {
-      this.state.previewError = String(error);
+      this.state.actionError = String(error);
       this.render();
       return;
     }
@@ -212,12 +224,15 @@ export class ProjectFilesController {
         line,
         path: this.state.selected.path,
       });
+      if (!this.fileCurrent(revision, request, selected)) return;
       console.info("project-files.line-comment-add.completed", { line });
       this.cancelComment();
     } catch (error) {
+      if (!this.fileCurrent(revision, request, selected)) return;
       console.error("project-files.line-comment-add.failed", { errorType: error instanceof Error ? error.name : typeof error, line });
-      this.state.previewError = `添加第 ${line} 行评论失败：${String(error)}`;
+      this.state.actionError = `添加第 ${line} 行评论失败：${String(error)}`;
     } finally {
+      if (!this.fileCurrent(revision, request, selected)) return;
       this.state.submittingComment = false;
       this.render();
     }

@@ -48,7 +48,7 @@ function codeRows(controller) {
   const table = element("div", "project-file-code");
   table.setAttribute("aria-label", `${controller.state.selected.name} 文件内容`);
   table.setAttribute("role", "table");
-  controller.state.content.split("\n").forEach((code, index) => {
+  controller.state.content.split(/\r?\n/).forEach((code, index) => {
     const lineNumber = index + 1;
     const line = element("div", `project-file-line${controller.state.commentLine === lineNumber ? " is-commenting" : ""}`);
     line.setAttribute("role", "row");
