@@ -9,6 +9,10 @@ html, body, [data-xsec-plugin-root] { min-width: 0; min-height: 100%; margin: 0;
 button, textarea { font: inherit; }
 button:focus-visible, textarea:focus-visible { outline: 2px solid var(--xsec-accent); outline-offset: 2px; }
 .project-files-view { min-height: 100%; background: var(--xsec-surface-base); }
+.project-files-toolbar { display: flex; align-items: center; justify-content: space-between; min-height: 42px; padding: 0 12px; border-bottom: 1px solid var(--xsec-border-subtle); }
+.project-files-toolbar strong { font-size: 13px; }
+.project-files-refresh { padding: 4px 8px; border: 1px solid var(--xsec-border); border-radius: var(--xsec-radius-md); background: var(--xsec-surface-container); color: var(--xsec-text-secondary); cursor: pointer; }
+.project-files-refresh:disabled { cursor: not-allowed; opacity: .45; }
 .file-tree { display: grid; padding: 8px 0; }
 .file-tree-branch { display: contents; }
 .file-tree-row {

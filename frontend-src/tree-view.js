@@ -50,6 +50,16 @@ function appendDirectory(parent, controller, directory, depth) {
   for (const entry of files) parent.append(row(controller, entry, depth));
 }
 
+function toolbar(controller) {
+  const header = element("header", "project-files-toolbar");
+  header.append(element("strong", "", "项目文件"));
+  const refresh = actionButton("project-files-refresh", "刷新项目文件", () => controller.refresh());
+  refresh.disabled = controller.state.loadingDirectories.has("");
+  refresh.textContent = "刷新";
+  header.append(refresh);
+  return header;
+}
+
 export function renderTree(controller) {
   const rootFiles = controller.state.filesByDirectory.get("");
   const rootError = controller.state.directoryErrors.get("");
@@ -59,6 +69,7 @@ export function renderTree(controller) {
   const view = element("section", "project-files-view");
   if (controller.state.actionError) view.append(errorPanel(controller.state.actionError));
   if (controller.state.actionNotice) view.append(noticePanel(controller.state.actionNotice));
+  view.append(toolbar(controller));
   const tree = element("div", "file-tree");
   tree.setAttribute("aria-label", "项目文件");
   tree.setAttribute("role", "tree");

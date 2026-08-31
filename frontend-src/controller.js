@@ -75,6 +75,11 @@ export class ProjectFilesController {
     this.render();
   }
 
+  refresh() {
+    this.reset();
+    void this.loadDirectory("");
+  }
+
   render() {
     if (!this.root) return;
     const style = element("style", "", styles);

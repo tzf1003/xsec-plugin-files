@@ -1,4 +1,5 @@
 export const MAX_COMMENT_CHARACTERS = 32_768;
+export const MAX_PREVIEW_LINES = 2_000;
 const KILOBYTE = 1_024;
 const MEGABYTE = KILOBYTE * KILOBYTE;
 
@@ -28,6 +29,11 @@ export function fileContent(value) {
     throw new Error("文件读取结果无有效文本内容");
   }
   return value.content;
+}
+
+export function previewLines(content) {
+  const lines = content.split(/\r?\n/);
+  return { lines: lines.slice(0, MAX_PREVIEW_LINES), truncated: lines.length > MAX_PREVIEW_LINES };
 }
 
 export function formatFileSize(size) {

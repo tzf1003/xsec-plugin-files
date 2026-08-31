@@ -1,4 +1,5 @@
 import { icon } from "./icons.js";
+import { MAX_PREVIEW_LINES, previewLines } from "./model.js";
 import { actionButton, element, errorPanel, focusLater, loadingPanel, noticePanel } from "./view-utils.js";
 
 function composerButton(controller, file) {
@@ -34,7 +35,7 @@ function commentEditor(controller, lineNumber, code) {
   const cancel = actionButton("", "取消评论", () => controller.cancelComment());
   cancel.textContent = "取消";
   submit = actionButton("project-files-primary", "添加到对话框", () => { void controller.submitComment(lineNumber, code); });
-  submit.disabled = controller.state.submittingComment || !input.value.trim();
+  submit.disabled = !controller.composerWritable || controller.state.submittingComment || !input.value.trim();
   if (controller.state.submittingComment) submit.setAttribute("aria-busy", "true");
   submit.textContent = "添加到对话框";
   editor.addEventListener("submit", (event) => { event.preventDefault(); void controller.submitComment(lineNumber, code); });
@@ -48,7 +49,8 @@ function codeRows(controller) {
   const table = element("div", "project-file-code");
   table.setAttribute("aria-label", `${controller.state.selected.name} 文件内容`);
   table.setAttribute("role", "table");
-  controller.state.content.split(/\r?\n/).forEach((code, index) => {
+  const preview = previewLines(controller.state.content);
+  preview.lines.forEach((code, index) => {
     const lineNumber = index + 1;
     const line = element("div", `project-file-line${controller.state.commentLine === lineNumber ? " is-commenting" : ""}`);
     line.setAttribute("role", "row");
@@ -59,7 +61,7 @@ function codeRows(controller) {
     if (controller.state.commentLine === lineNumber) line.append(commentEditor(controller, lineNumber, code));
     table.append(line);
   });
-  return table;
+  return { table, truncated: preview.truncated };
 }
 
 export function renderPreview(controller) {
@@ -75,7 +77,11 @@ export function renderPreview(controller) {
   if (controller.state.actionNotice) preview.append(noticePanel(controller.state.actionNotice));
   if (controller.state.previewError) preview.append(errorPanel(controller.state.previewError, () => { void controller.openFile(file); }));
   else if (controller.state.fileLoading) preview.append(loadingPanel());
-  else preview.append(codeRows(controller));
+  else {
+    const code = codeRows(controller);
+    preview.append(code.table);
+    if (code.truncated) preview.append(noticePanel(`文件行数较多，仅显示前 ${MAX_PREVIEW_LINES.toLocaleString()} 行`));
+  }
   view.append(preview);
   return view;
 }
