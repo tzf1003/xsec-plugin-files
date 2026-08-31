@@ -14,7 +14,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Require the dual plugin manifests
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Build and validate the signed frontend source
         run: |
-          test -f plugins/com.xsec.workspace.files/plugin.json
-          test -f plugins/com.xsec.workspace.files/.codex-plugin/plugin.json
+          pnpm install --frozen-lockfile
+          pnpm run check
+          git diff --exit-code -- com.xsec.desktop/frontend/index.js plugins/com.xsec.workspace.files/
