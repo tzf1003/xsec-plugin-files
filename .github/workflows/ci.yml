@@ -26,3 +26,9 @@ jobs:
           pnpm install --frozen-lockfile
           pnpm run check
           git diff --exit-code -- com.xsec.desktop/frontend/index.js plugins/com.xsec.workspace.files/
+
+  source-preflight:
+    needs: manifest
+    uses: tzf1003/xsec-plugins/.github/workflows/first-party-source-preflight.yml@main
+    with:
+      plugin_id: com.xsec.workspace.files
