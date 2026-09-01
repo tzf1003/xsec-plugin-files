@@ -101,7 +101,7 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--xsec-acc
   color: var(--xsec-text-primary);
   cursor: pointer;
 }
-.project-file-line:hover .file-line-comment-trigger, .file-line-comment-trigger:focus-visible {
+.project-file-line:hover .file-line-comment-trigger:not(:disabled), .file-line-comment-trigger:focus-visible {
   opacity: 1;
   pointer-events: auto;
 }
