@@ -150,6 +150,7 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--xsec-acc
 .project-files-loading { display: grid; gap: 9px; padding: 14px 12px; }
 .project-files-loading-row { display: block; height: 18px; border-radius: var(--xsec-radius-sm); background: var(--xsec-surface-subtle); }
 @media (max-width: 520px) {
+  .file-line-comment-trigger:not(:disabled) { opacity: 1; pointer-events: auto; }
   .project-file-preview > header { grid-template-columns: 30px minmax(0, 1fr) 30px; }
   .project-file-preview > header small { display: none; }
   .file-line-comment-editor { width: calc(100vw - 54px); }
