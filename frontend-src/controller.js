@@ -140,6 +140,7 @@ export class ProjectFilesController {
     this.state.content = "";
     this.state.fileLoading = true;
     this.state.previewError = "";
+    this.state.submittingComment = false;
     this.state.selected = entry;
     this.render();
     console.info("project-files.file-read.started", { targetType: "file" });
@@ -161,6 +162,7 @@ export class ProjectFilesController {
 
   closeFile() {
     this.fileRequest += 1;
+    this.state.submittingComment = false;
     this.state.comment = "";
     this.state.commentLine = null;
     this.state.selected = null;
