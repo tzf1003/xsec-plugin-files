@@ -114,9 +114,10 @@ export class ProjectFilesController {
       console.error("project-files.directory-list.failed", { errorType: error instanceof Error ? error.name : typeof error, scope: directory ? "nested" : "root" });
       this.state.directoryErrors.set(directory, `列出项目文件失败：${String(error)}`);
     } finally {
-      if (!this.directoryCurrent(directory, request, revision)) return;
-      this.state.loadingDirectories.delete(directory);
-      this.render();
+      if (this.directoryCurrent(directory, request, revision)) {
+        this.state.loadingDirectories.delete(directory);
+        this.render();
+      }
     }
   }
 
@@ -154,9 +155,10 @@ export class ProjectFilesController {
       console.error("project-files.file-read.failed", { errorType: error instanceof Error ? error.name : typeof error });
       this.state.previewError = `读取文件失败：${String(error)}`;
     } finally {
-      if (this.revision !== revision || this.fileRequest !== request) return;
-      this.state.fileLoading = false;
-      this.render();
+      if (this.revision === revision && this.fileRequest === request) {
+        this.state.fileLoading = false;
+        this.render();
+      }
     }
   }
 
@@ -201,9 +203,10 @@ export class ProjectFilesController {
       console.error("project-files.composer-path-add.failed", { errorType: error instanceof Error ? error.name : typeof error, targetType: entry.isDirectory ? "directory" : "file" });
       this.state.actionError = `添加“${entry.name}”失败：${String(error)}`;
     } finally {
-      if (this.state.addingPaths !== addingPaths) return;
-      addingPaths.delete(entry.path);
-      this.render();
+      if (this.state.addingPaths === addingPaths) {
+        addingPaths.delete(entry.path);
+        this.render();
+      }
     }
   }
 
@@ -239,9 +242,10 @@ export class ProjectFilesController {
       console.error("project-files.line-comment-add.failed", { errorType: error instanceof Error ? error.name : typeof error, line });
       this.state.actionError = `添加第 ${line} 行评论失败：${String(error)}`;
     } finally {
-      if (!this.fileCurrent(revision, request, selected)) return;
-      this.state.submittingComment = false;
-      this.render();
+      if (this.fileCurrent(revision, request, selected)) {
+        this.state.submittingComment = false;
+        this.render();
+      }
     }
   }
 }
