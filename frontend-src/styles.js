@@ -90,7 +90,8 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--xsec-acc
 .project-file-line { position: relative; display: grid; min-width: max-content; grid-template-columns: 28px 42px minmax(240px, 1fr); }
 .project-file-line:hover, .project-file-line.is-commenting { background: var(--xsec-accent-soft); }
 .file-line-comment-trigger {
-  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
   width: 24px;
   height: 24px;
   padding: 0;
@@ -100,7 +101,10 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--xsec-acc
   color: var(--xsec-text-primary);
   cursor: pointer;
 }
-.project-file-line:hover .file-line-comment-trigger, .file-line-comment-trigger:focus-visible { visibility: visible; }
+.project-file-line:hover .file-line-comment-trigger:not(:disabled), .file-line-comment-trigger:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
 .file-line-comment-trigger:disabled { cursor: not-allowed; opacity: .35; }
 .file-line-number { padding-right: 12px; color: var(--xsec-text-tertiary); text-align: right; user-select: none; }
 .project-file-line code { padding-right: 16px; color: var(--xsec-text-primary); white-space: pre; }
