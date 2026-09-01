@@ -28,8 +28,8 @@ function pathRequest(entry) {
 }
 
 export class ProjectFilesController {
-  constructor(host) {
-    this.host = host;
+  constructor(api) {
+    this.api = api;
     this.state = initialState();
     this.contextKey = "";
     this.composerWritable = false;
@@ -104,7 +104,7 @@ export class ProjectFilesController {
     this.render();
     console.info("project-files.directory-list.started", { scope: directory ? "nested" : "root" });
     try {
-      const result = await this.host.request("xsec.files.list", { directory: directory || undefined });
+      const result = await this.api.list(directory);
       if (!this.directoryCurrent(directory, request, revision)) return;
       const entries = fileEntries(result);
       this.state.filesByDirectory.set(directory, entries);
@@ -145,7 +145,7 @@ export class ProjectFilesController {
     this.render();
     console.info("project-files.file-read.started", { targetType: "file" });
     try {
-      const result = await this.host.request("xsec.files.read", { path: entry.path });
+      const result = await this.api.read(entry.path);
       if (this.revision !== revision || this.fileRequest !== request) return;
       this.state.content = fileContent(result);
       console.info("project-files.file-read.completed", { characterCount: this.state.content.length });
@@ -192,7 +192,7 @@ export class ProjectFilesController {
     this.render();
     console.info("project-files.composer-path-add.started", { targetType: entry.isDirectory ? "directory" : "file" });
     try {
-      await this.host.request("xsec.workspace.composer.path.add", pathRequest(entry));
+      await this.api.addPath(pathRequest(entry));
       if (this.revision !== revision) return;
       console.info("project-files.composer-path-add.completed", { targetType: entry.isDirectory ? "directory" : "file" });
       this.state.actionNotice = `已将“${entry.name}”添加到会话`;
@@ -225,7 +225,7 @@ export class ProjectFilesController {
       this.state.submittingComment = true;
       this.render();
       console.info("project-files.line-comment-add.started", { line });
-      await this.host.request("xsec.workspace.composer.line-comment.add", {
+      await this.api.addLineComment({
         comment,
         expectedLine: code,
         line,
