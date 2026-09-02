@@ -63,13 +63,22 @@ function toolbar(controller) {
 export function renderTree(controller) {
   const rootFiles = controller.state.filesByDirectory.get("");
   const rootError = controller.state.directoryErrors.get("");
-  if (rootError && !rootFiles) return errorPanel(rootError, () => { void controller.loadDirectory(""); });
-  if (!rootFiles && controller.state.loadingDirectories.has("")) return loadingPanel();
-  if (!rootFiles?.length) return emptyPanel("项目目录为空或尚未绑定工作区");
   const view = element("section", "project-files-view");
   if (controller.state.actionError) view.append(errorPanel(controller.state.actionError));
   if (controller.state.actionNotice) view.append(noticePanel(controller.state.actionNotice));
   view.append(toolbar(controller));
+  if (rootError && !rootFiles) {
+    view.append(errorPanel(rootError, () => { void controller.loadDirectory(""); }));
+    return view;
+  }
+  if (!rootFiles && controller.state.loadingDirectories.has("")) {
+    view.append(loadingPanel());
+    return view;
+  }
+  if (!rootFiles?.length) {
+    view.append(emptyPanel(controller.contextKey ? "项目目录为空" : "尚未绑定工作区"));
+    return view;
+  }
   const tree = element("div", "file-tree");
   tree.setAttribute("aria-label", "项目文件");
   tree.setAttribute("role", "tree");
