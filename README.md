@@ -21,4 +21,4 @@ mirror at `plugins/com.xsec.workspace.files/` from this plugin root.
 
 Run `pnpm install` followed by `pnpm run check` before publishing. The check
 bundles the frontend, verifies the manifest RPC contract and keeps the checked-in
-frontend artifact current. Version `1.3.1` requires Desktop Plugin API `1.4.0`.
+frontend artifact current. Version `1.3.2` requires Desktop Plugin API `1.4.0`.

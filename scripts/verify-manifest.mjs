@@ -13,7 +13,7 @@ const expectedMethods = [
   "xsec.workspace.composer.path.add",
 ];
 
-if (manifest.version !== "1.3.1") throw new Error("项目文件插件版本必须为 1.3.1");
+if (manifest.version !== "1.3.2") throw new Error("项目文件插件版本必须为 1.3.2");
 if (codexManifest.name !== manifest.name || codexManifest.version !== manifest.version) {
   throw new Error("Codex 插件元数据必须与发布清单保持一致");
 }
