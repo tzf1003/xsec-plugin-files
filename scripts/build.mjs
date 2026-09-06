@@ -1,7 +1,6 @@
 import { build } from "esbuild";
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
-import { syncReleaseLayout } from "./sync-release-layout.mjs";
 
 const pluginRoot = new URL("../", import.meta.url);
 const root = fileURLToPath(pluginRoot);
@@ -36,5 +35,3 @@ const frontend = replaceExactlyOnce(
   "",
 );
 await writeFile(frontendOutput, `${frontend.trimEnd()}\n`, "utf8");
-
-await syncReleaseLayout();
