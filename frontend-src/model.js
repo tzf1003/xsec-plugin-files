@@ -44,8 +44,8 @@ export function formatFileSize(size) {
 }
 
 export function workspaceKey(context) {
-  const workspace = context?.workspace;
-  return typeof workspace?.projectId === "string" ? workspace.projectId : "";
+  const revision = context?.surface?.bindingRevision;
+  return typeof revision === "string" ? revision : "";
 }
 
 export function composerWritable(context) {
